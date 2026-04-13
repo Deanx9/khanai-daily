@@ -1,0 +1,41 @@
+name: Daily AI Blog Post
+
+on:
+  schedule:
+    - cron: '0 13 * * *'  # 1:00 PM UTC = 8:00 AM EST (UTC-5) / 9:00 AM EDT (UTC-4)
+  workflow_dispatch:        # allows manual trigger from GitHub Actions tab
+
+jobs:
+  generate-post:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # required for git push
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate today's post
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-post.js
+
+      - name: Commit and push new post
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add posts/
+          git diff --staged --quiet || git commit -m "chore: auto-post for $(date -u +%Y-%m-%d)"
+          git push

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KhanAI Daily</title>
+  <meta name="description" content="" id="meta-description" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ──────────────────────────────────────────────────── -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="site-title">⚡ KhanAI Daily</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="tools.html">Tools</a>
+        <a href="index.html#newsletter" class="nav-cta">Newsletter</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── POST CONTENT ───────────────────────────────────────────── -->
+  <main class="container">
+    <div id="post-container" class="loading">Loading post&hellip;</div>
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="site-title">⚡ KhanAI Daily</a>
+          <p>Practical AI tools, workflows, and tips for builders, founders, and marketers. Published every day by Khan.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tools.html">AI Tools</a></li>
+            <li><a href="index.html#newsletter">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Topics</h4>
+          <ul>
+            <li><a href="#">AI Writing</a></li>
+            <li><a href="#">Automation</a></li>
+            <li><a href="#">Productivity</a></li>
+            <li><a href="#">Side Income</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-disclosure">
+          <strong>Affiliate Disclosure:</strong> Some links on this site are affiliate links.
+          If you click and make a purchase, KhanAI Daily may earn a commission at no extra cost to you.
+          We only recommend tools we genuinely believe in. &mdash; Khan
+        </p>
+        <p class="footer-copy">&copy; <span id="year"></span> KhanAI Daily</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    (async function () {
+      const container = document.getElementById('post-container');
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('slug');
+
+      if (!slug) {
+        container.className = 'error';
+        container.innerHTML = 'No post specified. <a href="index.html">Return to homepage &rarr;</a>';
+        return;
+      }
+
+      try {
+        const res = await fetch('posts/' + encodeURIComponent(slug) + '.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const post = await res.json();
+
+        document.title = escapeHtml(post.title) + ' — KhanAI Daily';
+        document.getElementById('meta-description').setAttribute('content', post.excerpt || post.summary || '');
+
+        const tags = (post.tags || []).map(function (t) {
+          return '<span class="tag">' + escapeHtml(t) + '</span>';
+        }).join('');
+
+        container.className = '';
+        container.innerHTML =
+          '<article>' +
+            '<div class="post-header">' +
+              (tags ? '<div class="card-tags" style="margin-bottom:0.9rem">' + tags + '</div>' : '') +
+              '<h1>' + escapeHtml(post.title) + '</h1>' +
+              '<div class="post-meta">' +
+                '<span>' + formatDate(post.date) + '</span>' +
+                '<span class="author-chip">Khan</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="post-body">' + post.body_html + '</div>' +
+            '<div class="post-back">' +
+              '<a href="index.html">← Back to all posts</a>' +
+            '</div>' +
+          '</article>';
+
+      } catch (err) {
+        container.className = 'error';
+        container.innerHTML = 'Post not found or failed to load. <a href="index.html">Return to homepage &rarr;</a>';
+        console.error('Error loading post:', err);
+      }
+    })();
+
+    function formatDate(iso) {
+      return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+
+</body>
+</html>

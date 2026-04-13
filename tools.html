@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Best AI Tools — KhanAI Daily</title>
+  <meta name="description" content="Khan's recommended AI tools. Honest picks for founders, marketers, and builders." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── HEADER ──────────────────────────────────────────────────── -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="site-title">⚡ KhanAI Daily</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="tools.html">Tools</a>
+        <a href="index.html#newsletter" class="nav-cta">Newsletter</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── PAGE HERO ──────────────────────────────────────────────── -->
+  <main class="container">
+    <div class="page-hero">
+      <h1>Best AI Tools</h1>
+      <p>Handpicked tools we use and recommend. Affiliate links help keep this site free — we only list what we'd genuinely use.</p>
+    </div>
+
+    <div id="tools-container" class="loading">Loading tools&hellip;</div>
+  </main>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="site-title">⚡ KhanAI Daily</a>
+          <p>Practical AI tools, workflows, and tips for builders, founders, and marketers. Published every day by Khan.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tools.html">AI Tools</a></li>
+            <li><a href="index.html#newsletter">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Topics</h4>
+          <ul>
+            <li><a href="#">AI Writing</a></li>
+            <li><a href="#">Automation</a></li>
+            <li><a href="#">Productivity</a></li>
+            <li><a href="#">Side Income</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-disclosure">
+          <strong>FTC Disclosure:</strong> This page contains affiliate links. KhanAI Daily may receive a
+          commission if you purchase through these links. This does not influence our editorial opinions —
+          we only list tools we genuinely recommend and have evaluated. &mdash; Khan
+        </p>
+        <p class="footer-copy">&copy; <span id="year"></span> KhanAI Daily</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /*
+     * TOOL_META — icon sources chosen per tool:
+     *   iconUrl  : highest-quality known icon URL
+     *   iconUrl2 : fallback if primary fails (Google favicon @ 128px)
+     *   emoji    : last-resort text fallback
+     */
+    const TOOL_META = {
+      jasper: {
+        label: 'Jasper AI',
+        // Apple-touch icon is 180×180 — much sharper than the 32px favicon
+        iconUrl:  'https://assets.jasper.ai/images/favicon/apple-touch-icon.png',
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=jasper.ai&sz=128',
+        emoji: '✍️',
+        desc: 'AI writing assistant built for marketing teams. Creates on-brand content at scale.'
+      },
+      notion: {
+        label: 'Notion AI',
+        iconUrl:  'https://icon.horse/icon/notion.so',   // 512×512 ✓
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=notion.so&sz=128',
+        emoji: '📋',
+        desc: 'The all-in-one workspace now with AI built in. Write, plan, and organize smarter.'
+      },
+      make: {
+        label: 'Make',
+        iconUrl:  'https://icon.horse/icon/make.com',    // 48×48 — acceptable
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=make.com&sz=128',
+        emoji: '⚙️',
+        desc: 'Visual automation platform. Connect apps and automate workflows without code.'
+      },
+      elevenlabs: {
+        label: 'ElevenLabs',
+        iconUrl:  'https://icon.horse/icon/elevenlabs.io', // 48×48 — acceptable
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128',
+        emoji: '🎙️',
+        desc: 'Hyper-realistic AI voice generation. Clone voices or create entirely new ones.'
+      },
+      writesonic: {
+        label: 'Writesonic',
+        // Use their CDN apple-touch icon for a crisp 180px version
+        iconUrl:  'https://writesonic.com/apple-touch-icon.png',
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=writesonic.com&sz=128',
+        emoji: '📝',
+        desc: 'Fast AI content creation for blogs, ads, emails, and social posts.'
+      },
+      cursor: {
+        label: 'Cursor',
+        iconUrl:  'https://icon.horse/icon/cursor.sh',   // 512×512 ✓
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=cursor.sh&sz=128',
+        emoji: '💻',
+        desc: 'AI-first code editor. Write, edit, and ship code with a built-in AI pair programmer.'
+      },
+      perplexity: {
+        label: 'Perplexity AI',
+        iconUrl:  'https://icon.horse/icon/perplexity.ai', // 48×48 — acceptable
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=perplexity.ai&sz=128',
+        emoji: '🔍',
+        desc: 'AI-powered search engine that gives you cited, up-to-date answers instantly.'
+      },
+      chatgpt: {
+        label: 'ChatGPT Plus',
+        iconUrl:  'https://icon.horse/icon/openai.com',  // 180×180 ✓
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=openai.com&sz=128',
+        emoji: '🤖',
+        desc: "OpenAI's flagship AI assistant. Access GPT-4o, image gen, plugins, and more."
+      },
+      claude: {
+        label: 'Claude Pro',
+        // Anthropic's apple-touch icon is 180×180
+        iconUrl:  'https://www.anthropic.com/apple-touch-icon.png',
+        iconUrl2: 'https://www.google.com/s2/favicons?domain=anthropic.com&sz=128',
+        emoji: '✦',
+        desc: "Anthropic's powerful AI for reasoning, writing, and long-context tasks."
+      }
+    };
+
+    /*
+     * Renders: <img> (primary) + hidden <span> emoji.
+     * NO inline onerror strings — a JS listener does the swap cleanly.
+     */
+    function toolIcon(meta) {
+      if (!meta.iconUrl) {
+        return '<div class="tool-icon tool-icon--emoji"><span>' + meta.emoji + '</span></div>';
+      }
+      return (
+        '<div class="tool-icon tool-icon--logo"' +
+            ' data-fallback-url="' + escapeHtml(meta.iconUrl2 || '') + '"' +
+            ' data-emoji="' + escapeHtml(meta.emoji) + '">' +
+          '<img src="' + escapeHtml(meta.iconUrl) + '" alt="' + escapeHtml(meta.label) + ' logo">' +
+          '<span class="tool-icon-fallback">' + meta.emoji + '</span>' +
+        '</div>'
+      );
+    }
+
+    /* Attach error handling after the grid is in the DOM */
+    function attachIconFallbacks() {
+      document.querySelectorAll('.tool-icon--logo img').forEach(function (img) {
+        function tryFallback() {
+          var wrap     = img.parentElement;
+          var fallback = wrap.dataset.fallbackUrl;
+          if (fallback && img.src !== fallback) {
+            img.src = fallback;          // try secondary URL once
+            img.onerror = showEmoji;
+          } else {
+            showEmoji();
+          }
+        }
+        function showEmoji() {
+          img.style.display = 'none';
+          var span = img.parentElement.querySelector('.tool-icon-fallback');
+          if (span) span.style.display = 'flex';
+        }
+        if (img.complete && (img.naturalWidth === 0 || img.naturalHeight === 0)) {
+          tryFallback();
+        } else {
+          img.addEventListener('error', tryFallback);
+        }
+      });
+    }
+
+    (async function () {
+      const container = document.getElementById('tools-container');
+
+      try {
+        const res = await fetch('affiliate-config.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const config = await res.json();
+
+        const entries = Object.entries(config);
+        if (entries.length === 0) {
+          container.innerHTML = '<p class="loading">No tools listed yet.</p>';
+          return;
+        }
+
+        container.className = 'tools-grid';
+        container.innerHTML = entries.map(function (entry) {
+          const key  = entry[0];
+          const url  = typeof entry[1] === 'string' ? entry[1] : (entry[1].url || '#');
+          const meta = TOOL_META[key] || { emoji: '🛠️', label: key, desc: 'A powerful AI tool.' };
+          const name = meta.label || key;
+          const desc = meta.desc  || 'A powerful AI tool.';
+
+          return (
+            '<div class="tool-card">' +
+              toolIcon(meta) +
+              '<h3>' + escapeHtml(name) + '</h3>' +
+              '<p>' + escapeHtml(desc) + '</p>' +
+              '<a href="' + escapeHtml(url) + '" class="btn" target="_blank" rel="noopener noreferrer sponsored">' +
+                'Try free →' +
+              '</a>' +
+            '</div>'
+          );
+        }).join('');
+
+        attachIconFallbacks();   // safe — DOM is ready now
+
+      } catch (err) {
+        container.className = 'error';
+        container.textContent = 'Failed to load tools. Please try again later.';
+        console.error('Error loading tools:', err);
+      }
+    })();
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+
+</body>
+</html>

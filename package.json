@@ -1,0 +1,15 @@
+{
+  "name": "ai-edge-daily",
+  "version": "1.0.0",
+  "description": "Automated AI blog with daily Claude-generated posts",
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate-post.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.6"
+  }
+}

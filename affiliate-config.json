@@ -1,0 +1,47 @@
+{
+  "jasper": {
+    "name": "Jasper AI",
+    "url": "https://jasper.ai/?fpr=YOURCODE",
+    "description": "AI writing assistant built for marketers and content teams. Generate blog posts, ads, and emails in seconds."
+  },
+  "notion": {
+    "name": "Notion AI",
+    "url": "https://notion.so/YOURCODE",
+    "description": "All-in-one workspace with built-in AI. Write, plan, and organize everything in one place."
+  },
+  "make": {
+    "name": "Make (formerly Integromat)",
+    "url": "https://make.com/YOURCODE",
+    "description": "Visual no-code automation platform to connect apps and automate workflows without writing code."
+  },
+  "elevenlabs": {
+    "name": "ElevenLabs",
+    "url": "https://elevenlabs.io/YOURCODE",
+    "description": "State-of-the-art AI voice generation. Clone voices and create realistic speech from text."
+  },
+  "writesonic": {
+    "name": "Writesonic",
+    "url": "https://writesonic.com/YOURCODE",
+    "description": "AI writer for blogs, ads, landing pages, and product descriptions. SEO-optimized output."
+  },
+  "cursor": {
+    "name": "Cursor",
+    "url": "https://cursor.sh/YOURCODE",
+    "description": "The AI-first code editor. Write, edit, and chat about your code with GPT-4 built right in."
+  },
+  "perplexity": {
+    "name": "Perplexity AI",
+    "url": "https://perplexity.ai/YOURCODE",
+    "description": "AI-powered search engine that gives you direct answers with cited sources. Replace Google for research."
+  },
+  "chatgpt": {
+    "name": "ChatGPT Plus",
+    "url": "https://openai.com/YOURCODE",
+    "description": "OpenAI's flagship AI assistant. Access GPT-4, DALL-E image generation, and Advanced Data Analysis."
+  },
+  "claude": {
+    "name": "Claude Pro",
+    "url": "https://claude.ai/YOURCODE",
+    "description": "Anthropic's Claude — the AI assistant that excels at analysis, writing, and complex reasoning tasks."
+  }
+}
