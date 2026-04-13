@@ -1,0 +1,9 @@
+{
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "framework": null,
+  "rewrites": [
+    { "source": "/post/:slug", "destination": "/post.html" },
+    { "source": "/tools", "destination": "/tools.html" }
+  ]
+}
