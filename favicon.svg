@@ -1,27 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#06b6d4"/>
+    <!-- Deep, rich background — dark indigo to dark cyan -->
+    <linearGradient id="bg" x1="0" y1="48" x2="48" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#1e0546"/>
+      <stop offset="55%"  stop-color="#3b1088"/>
+      <stop offset="100%" stop-color="#0e4f72"/>
     </linearGradient>
-    <linearGradient id="dot" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#c4b5fd"/>
-      <stop offset="100%" stop-color="#67e8f9"/>
+
+    <!-- Node accent gradient — light violet to bright cyan -->
+    <linearGradient id="node" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
     </linearGradient>
+
+    <!-- Subtle inner highlight (depth on background) -->
+    <radialGradient id="shine" cx="30%" cy="20%" r="60%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Rounded square background -->
-  <rect width="48" height="48" rx="12" fill="url(#bg)"/>
+  <!-- Background rounded square -->
+  <rect width="48" height="48" rx="11" fill="url(#bg)"/>
 
-  <!-- K spine (vertical bar) -->
-  <rect x="11" y="10" width="7" height="28" rx="2" fill="white"/>
+  <!-- Inner highlight for premium depth -->
+  <rect width="48" height="48" rx="11" fill="url(#shine)"/>
 
-  <!-- K upper arm -->
-  <polygon points="16,24 35,10 35,17.5 21.5,24" fill="white"/>
+  <!-- Thin inner border — adds a polished edge -->
+  <rect x="0.75" y="0.75" width="46.5" height="46.5" rx="10.5"
+        stroke="white" stroke-opacity="0.10" stroke-width="1.5" fill="none"/>
 
-  <!-- K lower arm -->
-  <polygon points="16,24 35,38 35,30.5 21.5,24" fill="white"/>
+  <!--
+    K MARK — built from consistent 6px optical stroke weight
+    Spine  : x 11–17, full height 10–38
+    Upper arm : spine midpoint (17, 24) → top-right (35, 10), 6px thick
+    Lower arm : spine midpoint (17, 24) → bottom-right (35, 38), 6px thick
+  -->
 
-  <!-- Neural node accent at K joint — adds AI feel -->
-  <circle cx="18" cy="24" r="3.5" fill="url(#dot)"/>
+  <!-- Spine -->
+  <rect x="11" y="10" width="6.5" height="28" rx="2.5" fill="white"/>
+
+  <!-- Upper arm — parallelogram with consistent 6px visual thickness -->
+  <path d="M16 24 L34.5 9.5 L34.5 15.5 L19.5 24 Z" fill="white"/>
+
+  <!-- Lower arm -->
+  <path d="M16 24 L34.5 38.5 L34.5 32.5 L19.5 24 Z" fill="white"/>
+
+  <!-- Node at upper tip — circuit / neural endpoint -->
+  <circle cx="34.5" cy="9.5"  r="3.2" fill="url(#node)"/>
+
+  <!-- Node at lower tip -->
+  <circle cx="34.5" cy="38.5" r="3.2" fill="url(#node)"/>
+
+  <!-- Node at midpoint (K joint) — smallest, tightest -->
+  <circle cx="17"   cy="24"   r="2.2" fill="url(#node)" opacity="0.75"/>
 </svg>
