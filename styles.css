@@ -129,6 +129,13 @@ nav a {
     background var(--duration-fast) var(--ease-out);
 }
 
+/* Hide "Home" link on mobile — logo already links home */
+@media (max-width: 500px) {
+  nav a:not(.nav-cta):first-child { display: none; }
+  nav a:not(.nav-cta) { padding: 0.4rem 0.5rem; font-size: 0.82rem; }
+  nav a.nav-cta { padding: 0.4rem 0.85rem; }
+}
+
 nav a:hover {
   color: var(--primary);
   background: rgba(124,58,237,0.07);
