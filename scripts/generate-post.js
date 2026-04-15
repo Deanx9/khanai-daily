@@ -160,4 +160,25 @@ const meta = {
 index.unshift(meta);
 writeFileSync(indexPath, JSON.stringify(index, null, 2), 'utf8');
 console.log(`Updated posts/index.json. Total posts: ${index.length}`);
+
+// ── Update sitemap.xml ────────────────────────────────────────────────────────
+const sitemapPath = path.join(ROOT, 'sitemap.xml');
+let xml = readFileSync(sitemapPath, 'utf8');
+const sitemapEntry =
+  `  <url>\n` +
+  `    <loc>https://khanai-daily.vercel.app/post.html?slug=${post.slug}</loc>\n` +
+  `    <lastmod>${post.date}</lastmod>\n` +
+  `    <changefreq>never</changefreq>\n` +
+  `    <priority>0.7</priority>\n` +
+  `  </url>`;
+
+// Only add if this slug isn't already in the sitemap
+if (!xml.includes(post.slug)) {
+  xml = xml.replace('</urlset>', sitemapEntry + '\n</urlset>');
+  writeFileSync(sitemapPath, xml, 'utf8');
+  console.log('Updated sitemap.xml.');
+} else {
+  console.log('Sitemap already contains this slug — skipped.');
+}
+
 console.log('Done! ✓');
