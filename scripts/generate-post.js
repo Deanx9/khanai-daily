@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -75,27 +75,30 @@ Pick one specific, trending AI topic that would genuinely help someone save time
 
 Remember: output ONLY the JSON object, nothing else.`;
 
-// ── Call Claude API ───────────────────────────────────────────────────────────
-console.log(`Generating post for ${today}...`);
+// ── Call Groq API ─────────────────────────────────────────────────────────────
+console.log(`Generating post for ${today} using Groq (Llama 3.3 70B)...`);
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 let raw;
 try {
-  const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
+  const completion = await client.chat.completions.create({
+    model: 'llama-3.3-70b-versatile',
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user',   content: USER_PROMPT   },
+    ],
     max_tokens: 2048,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: USER_PROMPT }],
+    temperature: 0.8,
   });
-  raw = message.content[0].text.trim();
-  console.log('Claude API call successful.');
+  raw = completion.choices[0].message.content.trim();
+  console.log('Groq API call successful.');
 } catch (err) {
-  console.error('Anthropic API error:', err.message);
+  console.error('Groq API error:', err.message);
   process.exit(1);
 }
 
-// ── Strip markdown fences if Claude added them anyway ─────────────────────────
+// ── Strip markdown fences if model added them anyway ──────────────────────────
 if (raw.startsWith('```')) {
   raw = raw.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
 }
@@ -105,7 +108,7 @@ let post;
 try {
   post = JSON.parse(raw);
 } catch (err) {
-  console.error('Failed to parse Claude response as JSON.');
+  console.error('Failed to parse Groq response as JSON.');
   console.error('Raw response was:');
   console.error(raw);
   process.exit(1);
@@ -121,7 +124,6 @@ for (const field of required) {
 }
 
 // ── Replace affiliate placeholders ────────────────────────────────────────────
-// Converts {{AFFILIATE_LINK_JASPER}} → actual URL from affiliate-config.json
 let replacements = 0;
 post.body_html = post.body_html.replace(
   /\{\{AFFILIATE_LINK_([A-Z]+)\}\}/g,
@@ -129,7 +131,7 @@ post.body_html = post.body_html.replace(
     const key = toolKey.toLowerCase();
     if (affiliates[key]) {
       replacements++;
-      return affiliates[key].url;
+      return affiliates[key].url || affiliates[key];
     }
     console.warn(`Unknown affiliate key: "${toolKey}" — leaving placeholder.`);
     return match;
@@ -149,13 +151,13 @@ console.log(`Saved: posts/${post.slug}.json`);
 
 // ── Prepend to index.json ─────────────────────────────────────────────────────
 const meta = {
-  slug: post.slug,
-  title: post.title,
-  date: post.date,
-  excerpt: post.excerpt,
+  slug:          post.slug,
+  title:         post.title,
+  date:          post.date,
+  excerpt:       post.excerpt,
   tool_featured: post.tool_featured || null,
 };
 index.unshift(meta);
 writeFileSync(indexPath, JSON.stringify(index, null, 2), 'utf8');
 console.log(`Updated posts/index.json. Total posts: ${index.length}`);
-console.log('Done!');
+console.log('Done! ✓');

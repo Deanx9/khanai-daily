@@ -29,7 +29,7 @@ jobs:
 
       - name: Generate today's post
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: node scripts/generate-post.js
 
       - name: Commit and push new post

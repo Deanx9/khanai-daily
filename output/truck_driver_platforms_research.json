@@ -1,0 +1,150 @@
+{
+  "generated_at": "2026-04-12",
+  "sources": [
+    {
+      "platform": "DAT Load Board",
+      "url": "https://www.dat.com/load-boards",
+      "data_available": ["company_name", "phone", "address", "dot_number", "mc_number", "location", "equipment_type"],
+      "scraping_method": "API",
+      "terms_of_service_allow": false,
+      "api_available": true,
+      "api_notes": "Paid Systems Integration Agreement (SIA) required. Contact: developersupport@dat.com",
+      "daily_new_listings": "644500+",
+      "difficulty_level": "very_high",
+      "contact_data_public": true,
+      "notes": "Largest load board in USA. Carrier directory exposes name, phone, DOT. API is the only legal access path."
+    },
+    {
+      "platform": "Truckstop.com",
+      "url": "https://truckstop.com",
+      "data_available": ["company_name", "phone", "email", "location", "equipment_type"],
+      "scraping_method": "API",
+      "terms_of_service_allow": false,
+      "api_available": true,
+      "api_notes": "REST API with OAuth2 and Resource Owner Password auth. Developer portal at developer.truckstop.com. SIA required.",
+      "daily_new_listings": "350000+",
+      "difficulty_level": "very_high",
+      "contact_data_public": false,
+      "notes": "Contact data visible only to authenticated platform members. 80M+ loads/year. API partnership required for legal access."
+    },
+    {
+      "platform": "TruckersReport",
+      "url": "https://www.thetruckersreport.com",
+      "data_available": ["username", "location", "forum_posts"],
+      "scraping_method": "Web Scraping",
+      "terms_of_service_allow": false,
+      "api_available": false,
+      "api_notes": "No public API. Forum-based community platform.",
+      "daily_new_listings": "not_disclosed",
+      "difficulty_level": "medium",
+      "contact_data_public": false,
+      "notes": "1M+ monthly users, 210K+ registered members. Largest trucker online community. Contact info is member-controlled and not publicly listed. Job board section exists but contact exposure is limited."
+    },
+    {
+      "platform": "CDLjobs.com",
+      "url": "https://www.cdljobs.com",
+      "data_available": ["company_name", "location", "job_title", "salary"],
+      "scraping_method": "Web Scraping",
+      "terms_of_service_allow": false,
+      "api_available": true,
+      "api_notes": "Supports Tenstreet, DriverReach, Ramsey Media Works integrations. No public scraping API.",
+      "daily_new_listings": "hundreds",
+      "difficulty_level": "medium",
+      "contact_data_public": false,
+      "notes": "Specialized CDL job board. Employer contact varies by posting. Dynamic JS rendering. No explicit scraping ban in public ToS but access is restricted in practice."
+    },
+    {
+      "platform": "Indeed",
+      "url": "https://www.indeed.com",
+      "data_available": ["company_name", "location", "job_title", "salary"],
+      "scraping_method": "API",
+      "terms_of_service_allow": false,
+      "api_available": false,
+      "api_notes": "Indeed Hire API exists for employers only. No public data API. ToS explicitly forbids automated access.",
+      "daily_new_listings": "204257+",
+      "difficulty_level": "very_high",
+      "contact_data_public": false,
+      "notes": "204K+ active truck driver jobs. Cloudflare anti-bot protection. Direct contact info not exposed. Legal risk under CFAA if scraped without permission."
+    },
+    {
+      "platform": "LinkedIn Jobs",
+      "url": "https://www.linkedin.com/jobs",
+      "data_available": ["company_name", "location", "job_title"],
+      "scraping_method": "API",
+      "terms_of_service_allow": false,
+      "api_available": true,
+      "api_notes": "Talent Solutions Partner API only. Requires LinkedIn partnership. robots.txt: Disallow: /",
+      "daily_new_listings": "1000+",
+      "difficulty_level": "extreme",
+      "contact_data_public": false,
+      "notes": "Personal contact info NOT exposed publicly. LinkedIn has successfully sued scrapers (CFAA). Account ban and legal risk for unauthorized scraping."
+    },
+    {
+      "platform": "DriveMyWay",
+      "url": "https://www.drivemyway.com",
+      "data_available": [],
+      "scraping_method": "None",
+      "terms_of_service_allow": false,
+      "api_available": false,
+      "api_notes": "No public API. ToS explicitly forbids scraping, crawling, or spidering.",
+      "daily_new_listings": "not_disclosed",
+      "difficulty_level": "extreme",
+      "contact_data_public": false,
+      "notes": "Privacy-focused platform. Explicitly states 'no data-sharing or email dumping'. Express written consent required for any automated access. Not recommended."
+    },
+    {
+      "platform": "FreightWaves",
+      "url": "https://www.freightwaves.com",
+      "data_available": ["industry_news", "market_data"],
+      "scraping_method": "None",
+      "terms_of_service_allow": false,
+      "api_available": false,
+      "api_notes": "SONAR platform and Carrier Details database are paid services, not job data APIs.",
+      "daily_new_listings": "N/A",
+      "difficulty_level": "not_applicable",
+      "contact_data_public": false,
+      "notes": "NOT a job board. Industry news and market data company. Carrier Details aggregates FMCSA federal data. Not suitable for driver contact collection."
+    },
+    {
+      "platform": "Convoy (via DAT)",
+      "url": "https://convoy.com",
+      "data_available": ["company_name", "location", "equipment_type"],
+      "scraping_method": "API",
+      "terms_of_service_allow": false,
+      "api_available": true,
+      "api_notes": "Broker API, Users API, Application API. Acquired by DAT from Flexport (2024). Contact: partnerships@convoy.com",
+      "daily_new_listings": "644500+ (shared DAT network)",
+      "difficulty_level": "very_high",
+      "contact_data_public": false,
+      "notes": "Now integrated into DAT platform post-acquisition. Requires authentication. API partnership required for programmatic access."
+    }
+  ],
+  "recommended_sources": [
+    {
+      "platform": "DAT Load Board",
+      "reason": "Largest load board in USA with 644K+ daily listings. Carrier directory exposes name, phone, DOT number. Official API available via paid SIA agreement.",
+      "action": "Apply for Systems Integration Agreement at dat.com/resources/api-integration. Contact: developersupport@dat.com"
+    },
+    {
+      "platform": "Truckstop.com",
+      "reason": "350K+ daily loads, 80M+ loads/year. REST API with OAuth2. Carrier profiles include phone and contact info for authenticated users.",
+      "action": "Register at developer.truckstop.com. Support: 1-800-203-2540, Support@truckstop.com"
+    },
+    {
+      "platform": "TruckersReport",
+      "reason": "Largest trucker online community (1M+ monthly users). Medium difficulty to monitor. Job board section has employer and driver postings.",
+      "action": "Monitor job board section manually or with rate-limited scraping. No API available. Respect member privacy."
+    },
+    {
+      "platform": "CDLjobs.com",
+      "reason": "Specialized CDL job board with national coverage. Medium difficulty. Integrates with ATS platforms like Tenstreet.",
+      "action": "Explore Tenstreet or DriverReach integration partnerships for data access."
+    }
+  ],
+  "data_freshness_strategy": {
+    "how_to_get_new_listings_daily": "Use DAT or Truckstop API with date filter on createdAt field. For web sources, compare hash of listing page content to detect changes.",
+    "deduplication": "Use composite key of (platform + job_id) or (company_name + location + posted_date) as unique identifier. Store in database with upsert logic.",
+    "quality_filtering": "Filter out listings missing phone or email. Prefer postings with rate/salary info. Prioritize owner-operator vs company driver listings."
+  },
+  "implementation_notes": "All major platforms prohibit scraping in their Terms of Service. The only legally compliant path at scale is through official API partnerships (DAT, Truckstop). For small-scale manual research, TruckersReport and CDLjobs.com are accessible. Recommended tech stack: Python with httpx + BeautifulSoup for exploratory scraping, or official SDK/REST clients for API integrations. Use rotating proxies and rate limiting if doing research scraping. Always check robots.txt before automated access. For production use, budget $500-2000/month for DAT or Truckstop API access tiers."
+}
