@@ -105,6 +105,16 @@ header .container {
 
 .site-title:hover { opacity: 0.8; }
 
+.site-logo {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+  margin-right: 0.1rem;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
 nav { display: flex; align-items: center; gap: 0.2rem; }
 
 nav a {
