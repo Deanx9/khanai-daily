@@ -99,6 +99,7 @@ header .container {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.035em;
+  white-space: nowrap;  /* prevent logo from wrapping to 2 lines */
   transition: opacity var(--duration-fast) var(--ease-out);
 }
 
@@ -337,10 +338,14 @@ nav a.nav-cta:hover {
 /* First card spans full width as featured */
 .card-grid .card:first-child {
   grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.card-grid .card:first-child h2 {
+  font-size: 1.45rem;
+  line-height: 1.28;
 }
 
 /* Staggered entrance animation */
@@ -1009,8 +1014,8 @@ a.tag:hover, .tag:hover {
   padding: 0.72rem 1.4rem;
   border: none;
   border-radius: var(--radius-pill);
-  background: var(--accent);
-  color: #fff;
+  background: #ffffff;
+  color: var(--primary-dark);
   font-size: 0.95rem;
   font-weight: 700;
   font-family: inherit;
@@ -1019,13 +1024,15 @@ a.tag:hover, .tag:hover {
   will-change: transform;
   transition:
     transform var(--duration-fast) var(--ease-spring),
-    box-shadow var(--duration-fast) var(--ease-out);
-  box-shadow: 0 2px 12px rgba(6,182,212,0.35);
+    box-shadow var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
 }
 
 .newsletter-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(6,182,212,0.45);
+  background: #f3f0ff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.22);
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -1056,6 +1063,11 @@ a.tag:hover, .tag:hover {
   padding: 4rem 2rem;
   color: var(--danger);
   font-size: 0.9rem;
+}
+
+.error a {
+  color: var(--primary);
+  text-decoration: underline;
 }
 
 /* ══════════════════════════════════════════════════════════════════
