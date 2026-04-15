@@ -65,7 +65,13 @@ OUTPUT FORMAT — respond with ONLY valid JSON, no markdown fences, no preamble,
   "slug": "${today}-kebab-case-title",
   "date": "${today}",
   "excerpt": "string — one sentence summary, max 160 characters",
+  "tags": ["string", "string", "string"] — 3-5 lowercase topic tags (e.g. ["ai writing", "automation", "productivity"]),
   "tool_featured": "string — primary tool key, lowercase (e.g. cursor)",
+  "faq": [
+    {"question": "string — a real question a reader would Google", "answer": "string — concise answer, 1-3 sentences"},
+    {"question": "string", "answer": "string"},
+    {"question": "string", "answer": "string"}
+  ],
   "body_html": "string — full article as HTML. Use <h2>, <p>, <ul>, <li>, <strong>, <a> tags. Embed affiliate placeholders as described above. End with FTC disclosure paragraph."
 }`;
 
@@ -123,6 +129,26 @@ for (const field of required) {
   }
 }
 
+// ── Inject FAQPage JSON-LD block into body_html (AEO) ─────────────────────────
+if (Array.isArray(post.faq) && post.faq.length > 0) {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": post.faq.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer
+      }
+    }))
+  };
+  const faqHtml =
+    `\n<script type="application/ld+json">\n${JSON.stringify(faqSchema, null, 2)}\n</` + `script>`;
+  post.body_html += faqHtml;
+  console.log(`Injected FAQPage schema with ${post.faq.length} questions.`);
+}
+
 // ── Replace affiliate placeholders ────────────────────────────────────────────
 let replacements = 0;
 post.body_html = post.body_html.replace(
@@ -155,6 +181,7 @@ const meta = {
   title:         post.title,
   date:          post.date,
   excerpt:       post.excerpt,
+  tags:          post.tags || [],
   tool_featured: post.tool_featured || null,
 };
 index.unshift(meta);

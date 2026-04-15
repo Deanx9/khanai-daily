@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KhanAI Daily</title>
   <meta name="description" content="" id="meta-description" />
+
+  <!-- Canonical (updated by JS) -->
+  <link rel="canonical" href="https://khanai-daily.vercel.app/" id="canonical-tag" />
+
+  <!-- Open Graph (updated by JS) -->
+  <meta property="og:type"        content="article" />
+  <meta property="og:site_name"   content="KhanAI Daily" />
+  <meta property="og:title"       content="KhanAI Daily" id="og-title" />
+  <meta property="og:description" content="" id="og-description" />
+  <meta property="og:url"         content="https://khanai-daily.vercel.app/" id="og-url" />
+  <meta property="og:image"       content="https://khanai-daily.vercel.app/og-image.png" id="og-image" />
+  <meta property="article:author" content="Khan" />
+
+  <!-- Twitter Card (updated by JS) -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="KhanAI Daily" id="tw-title" />
+  <meta name="twitter:description" content="" id="tw-description" />
+  <meta name="twitter:image"       content="https://khanai-daily.vercel.app/og-image.png" />
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -24,6 +43,7 @@
   <!-- ── POST CONTENT ───────────────────────────────────────────── -->
   <main class="container">
     <div id="post-container" class="loading">Loading post&hellip;</div>
+    <div id="related-container"></div>
   </main>
 
   <!-- ── FOOTER ─────────────────────────────────────────────────── -->
@@ -45,10 +65,10 @@
         <div class="footer-col">
           <h4>Topics</h4>
           <ul>
-            <li><a href="#">AI Writing</a></li>
-            <li><a href="#">Automation</a></li>
-            <li><a href="#">Productivity</a></li>
-            <li><a href="#">Side Income</a></li>
+            <li><a href="topic.html?tag=ai+writing">AI Writing</a></li>
+            <li><a href="topic.html?tag=automation">Automation</a></li>
+            <li><a href="topic.html?tag=productivity">Productivity</a></li>
+            <li><a href="topic.html?tag=side+income">Side Income</a></li>
           </ul>
         </div>
       </div>
@@ -66,10 +86,34 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function formatDate(iso) {
+      return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+    }
+    function readingTime(html) {
+      var words = html.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).length;
+      return Math.max(1, Math.round(words / 200));
+    }
+    function wordCount(html) {
+      return html.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).length;
+    }
+    function injectSchema(obj) {
+      var s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.textContent = JSON.stringify(obj);
+      document.head.appendChild(s);
+    }
+
     (async function () {
-      const container = document.getElementById('post-container');
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get('slug');
+      var container = document.getElementById('post-container');
+      var params    = new URLSearchParams(window.location.search);
+      var slug      = params.get('slug');
 
       if (!slug) {
         container.className = 'error';
@@ -77,55 +121,136 @@
         return;
       }
 
+      var post, allPosts = [];
       try {
-        const res = await fetch('posts/' + encodeURIComponent(slug) + '.json');
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const post = await res.json();
-
-        document.title = escapeHtml(post.title) + ' — KhanAI Daily';
-        document.getElementById('meta-description').setAttribute('content', post.excerpt || post.summary || '');
-
-        const tags = (post.tags || []).map(function (t) {
-          return '<span class="tag">' + escapeHtml(t) + '</span>';
-        }).join('');
-
-        container.className = '';
-        container.innerHTML =
-          '<article>' +
-            '<div class="post-header">' +
-              (tags ? '<div class="card-tags" style="margin-bottom:0.9rem">' + tags + '</div>' : '') +
-              '<h1>' + escapeHtml(post.title) + '</h1>' +
-              '<div class="post-meta">' +
-                '<span>' + formatDate(post.date) + '</span>' +
-                '<span class="author-chip">Khan</span>' +
-              '</div>' +
-            '</div>' +
-            '<div class="post-body">' + post.body_html + '</div>' +
-            '<div class="post-back">' +
-              '<a href="index.html">← Back to all posts</a>' +
-            '</div>' +
-          '</article>';
-
+        var results = await Promise.all([
+          fetch('posts/' + encodeURIComponent(slug) + '.json'),
+          fetch('posts/index.json')
+        ]);
+        var postRes = results[0], idxRes = results[1];
+        if (!postRes.ok) throw new Error('HTTP ' + postRes.status);
+        post     = await postRes.json();
+        allPosts = idxRes.ok ? await idxRes.json() : [];
       } catch (err) {
         container.className = 'error';
-        container.innerHTML = 'Post not found or failed to load. <a href="index.html">Return to homepage &rarr;</a>';
-        console.error('Error loading post:', err);
+        container.innerHTML = 'Post not found. <a href="index.html">Return to homepage &rarr;</a>';
+        console.error(err);
+        return;
       }
-    })();
 
-    function formatDate(iso) {
-      return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric'
+      /* ── SEO meta ──────────────────────────────────────────────── */
+      var pageTitle = post.title + ' — KhanAI Daily';
+      var pageDesc  = post.excerpt || post.summary || '';
+      var pageUrl   = 'https://khanai-daily.vercel.app/post.html?slug=' + encodeURIComponent(post.slug);
+      var wc        = wordCount(post.body_html);
+      var rt        = readingTime(post.body_html);
+
+      document.title = pageTitle;
+      document.getElementById('meta-description').setAttribute('content', pageDesc);
+      document.getElementById('canonical-tag').setAttribute('href', pageUrl);
+      document.getElementById('og-title').setAttribute('content', pageTitle);
+      document.getElementById('og-description').setAttribute('content', pageDesc);
+      document.getElementById('og-url').setAttribute('content', pageUrl);
+      document.getElementById('tw-title').setAttribute('content', pageTitle);
+      document.getElementById('tw-description').setAttribute('content', pageDesc);
+
+      /* ── BlogPosting schema (AEO) ──────────────────────────────── */
+      injectSchema({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': post.title,
+        'description': pageDesc,
+        'url': pageUrl,
+        'datePublished': post.date,
+        'dateModified': post.date,
+        'wordCount': wc,
+        'timeRequired': 'PT' + rt + 'M',
+        'inLanguage': 'en-US',
+        'author': {
+          '@type': 'Person',
+          'name': 'Khan',
+          'url': 'https://khanai-daily.vercel.app/'
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'KhanAI Daily',
+          'url': 'https://khanai-daily.vercel.app/',
+          'logo': { '@type': 'ImageObject', 'url': 'https://khanai-daily.vercel.app/og-image.png' }
+        },
+        'mainEntityOfPage': { '@type': 'WebPage', '@id': pageUrl },
+        'keywords': (post.tags || []).join(', '),
+        'articleSection': (post.tags || [])[0] || 'AI Tools',
+        'isPartOf': {
+          '@type': 'Blog',
+          'name': 'KhanAI Daily',
+          'url': 'https://khanai-daily.vercel.app/'
+        }
       });
-    }
 
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
+      /* ── BreadcrumbList schema ──────────────────────────────────── */
+      injectSchema({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home',       'item': 'https://khanai-daily.vercel.app/' },
+          { '@type': 'ListItem', 'position': 2, 'name': post.title,   'item': pageUrl }
+        ]
+      });
+
+      /* ── Tags (clickable → topic pages) ────────────────────────── */
+      var tags = (post.tags || []).map(function (t) {
+        return '<a href="topic.html?tag=' + encodeURIComponent(t) + '" class="tag">' + escapeHtml(t) + '</a>';
+      }).join('');
+
+      /* ── Render post ────────────────────────────────────────────── */
+      container.className = '';
+      container.innerHTML =
+        '<nav class="breadcrumb" aria-label="Breadcrumb">' +
+          '<a href="index.html">Home</a>' +
+          '<span aria-hidden="true"> › </span>' +
+          '<span>' + escapeHtml(post.title) + '</span>' +
+        '</nav>' +
+        '<article>' +
+          '<div class="post-header">' +
+            (tags ? '<div class="card-tags" style="margin-bottom:0.9rem">' + tags + '</div>' : '') +
+            '<h1>' + escapeHtml(post.title) + '</h1>' +
+            '<div class="post-meta">' +
+              '<span>' + formatDate(post.date) + '</span>' +
+              '<span class="author-chip">Khan</span>' +
+              '<span class="reading-time">⏱ ' + rt + ' min read</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="post-body">' + post.body_html + '</div>' +
+          '<div class="post-back"><a href="index.html">← Back to all posts</a></div>' +
+        '</article>';
+
+      /* ── Related posts (internal linking) ──────────────────────── */
+      var postTags = post.tags || [];
+      var related = allPosts.filter(function (p) {
+        if (p.slug === post.slug) return false;
+        return (p.tags || []).some(function (t) { return postTags.indexOf(t) !== -1; });
+      }).slice(0, 3);
+
+      if (related.length > 0) {
+        var relEl = document.getElementById('related-container');
+        relEl.innerHTML =
+          '<section class="related-posts">' +
+            '<h3>Related Posts</h3>' +
+            '<div class="related-grid">' +
+            related.map(function (p) {
+              return (
+                '<a href="post.html?slug=' + encodeURIComponent(p.slug) + '" class="related-card">' +
+                  '<div class="related-date">' + formatDate(p.date) + '</div>' +
+                  '<div class="related-title">' + escapeHtml(p.title) + '</div>' +
+                  '<span class="related-arrow">Read →</span>' +
+                '</a>'
+              );
+            }).join('') +
+            '</div>' +
+          '</section>';
+      }
+
+    })();
   </script>
 
 </body>

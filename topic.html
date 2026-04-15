@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topic — KhanAI Daily</title>
+  <meta name="description" content="" id="meta-description" />
+  <link rel="canonical" href="https://khanai-daily.vercel.app/" id="canonical-tag" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"      content="website" />
+  <meta property="og:site_name" content="KhanAI Daily" />
+  <meta property="og:title"     content="KhanAI Daily" id="og-title" />
+  <meta property="og:url"       content="https://khanai-daily.vercel.app/" id="og-url" />
+  <meta property="og:image"     content="https://khanai-daily.vercel.app/og-image.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a href="index.html" class="site-title">⚡ KhanAI Daily</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="tools.html">Tools</a>
+        <a href="index.html#newsletter" class="nav-cta">Newsletter</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Home</a>
+      <span aria-hidden="true"> › </span>
+      <span id="breadcrumb-topic">Topic</span>
+    </nav>
+
+    <div class="page-hero">
+      <h1 id="topic-heading">Posts about…</h1>
+      <p id="topic-subheading"></p>
+    </div>
+
+    <div id="topic-container" class="loading">Loading posts&hellip;</div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="site-title">⚡ KhanAI Daily</a>
+          <p>Practical AI tools, workflows, and tips for builders, founders, and marketers. Published every day by Khan.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tools.html">AI Tools</a></li>
+            <li><a href="index.html#newsletter">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Topics</h4>
+          <ul>
+            <li><a href="topic.html?tag=ai+writing">AI Writing</a></li>
+            <li><a href="topic.html?tag=automation">Automation</a></li>
+            <li><a href="topic.html?tag=productivity">Productivity</a></li>
+            <li><a href="topic.html?tag=side+income">Side Income</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-disclosure">
+          <strong>Affiliate Disclosure:</strong> Some links on this site are affiliate links.
+          If you click and make a purchase, KhanAI Daily may earn a commission at no extra cost to you.
+          We only recommend tools we genuinely believe in. &mdash; Khan
+        </p>
+        <p class="footer-copy">&copy; <span id="year"></span> KhanAI Daily</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function formatDate(iso) {
+      return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+    }
+    function capitalize(str) {
+      return str.split(' ').map(function (w) {
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      }).join(' ');
+    }
+
+    (async function () {
+      var container = document.getElementById('topic-container');
+      var tag = decodeURIComponent(new URLSearchParams(window.location.search).get('tag') || '').trim();
+
+      if (!tag) {
+        container.className = 'error';
+        container.innerHTML = 'No topic specified. <a href="index.html">Return to homepage &rarr;</a>';
+        return;
+      }
+
+      var label   = capitalize(tag);
+      var pageUrl = 'https://khanai-daily.vercel.app/topic.html?tag=' + encodeURIComponent(tag);
+      var desc    = 'All KhanAI Daily posts about ' + label + '. Practical AI tips published daily.';
+
+      /* Meta */
+      document.title = label + ' — KhanAI Daily';
+      document.getElementById('meta-description').setAttribute('content', desc);
+      document.getElementById('canonical-tag').setAttribute('href', pageUrl);
+      document.getElementById('og-title').setAttribute('content', label + ' — KhanAI Daily');
+      document.getElementById('og-url').setAttribute('content', pageUrl);
+      document.getElementById('topic-heading').textContent = label;
+      document.getElementById('topic-subheading').textContent = desc;
+      document.getElementById('breadcrumb-topic').textContent = label;
+
+      /* CollectionPage schema */
+      var ldScript = document.createElement('script');
+      ldScript.type = 'application/ld+json';
+      ldScript.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        'name': label + ' — KhanAI Daily',
+        'description': desc,
+        'url': pageUrl,
+        'isPartOf': { '@type': 'WebSite', 'name': 'KhanAI Daily', 'url': 'https://khanai-daily.vercel.app/' }
+      });
+      document.head.appendChild(ldScript);
+
+      /* BreadcrumbList schema */
+      var bcScript = document.createElement('script');
+      bcScript.type = 'application/ld+json';
+      bcScript.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home',  'item': 'https://khanai-daily.vercel.app/' },
+          { '@type': 'ListItem', 'position': 2, 'name': label,   'item': pageUrl }
+        ]
+      });
+      document.head.appendChild(bcScript);
+
+      try {
+        var res   = await fetch('posts/index.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        var posts = await res.json();
+
+        var filtered = posts.filter(function (p) {
+          return (p.tags || []).indexOf(tag) !== -1;
+        });
+
+        if (filtered.length === 0) {
+          container.className = '';
+          container.innerHTML = '<p class="loading">No posts tagged "' + escapeHtml(label) + '" yet — check back soon!</p>';
+          return;
+        }
+
+        container.className = 'card-grid';
+        container.innerHTML = filtered.map(function (post, i) {
+          var tags = (post.tags || []).slice(0, 3).map(function (t) {
+            return '<a href="topic.html?tag=' + encodeURIComponent(t) + '" class="tag">' + escapeHtml(t) + '</a>';
+          }).join('');
+          return (
+            '<a class="card" href="post.html?slug=' + encodeURIComponent(post.slug) + '">' +
+              (i === 0 ? '<span class="card-badge">✦ Latest</span>' : '') +
+              '<div class="card-date">' + formatDate(post.date) + '</div>' +
+              '<h2>' + escapeHtml(post.title) + '</h2>' +
+              '<p>' + escapeHtml(post.excerpt || '') + '</p>' +
+              (tags ? '<div class="card-tags">' + tags + '</div>' : '') +
+              '<span class="card-arrow">Read article →</span>' +
+            '</a>'
+          );
+        }).join('');
+
+      } catch (err) {
+        container.className = 'error';
+        container.textContent = 'Failed to load posts. Please try again later.';
+        console.error(err);
+      }
+    })();
+  </script>
+
+</body>
+</html>
