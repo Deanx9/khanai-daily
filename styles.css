@@ -1112,7 +1112,7 @@ footer {
 
 .footer-brand .site-title {
   font-size: 1.1rem;
-  display: block;
+  display: inline-flex;
   margin-bottom: 0.8rem;
 }
 
