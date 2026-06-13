@@ -256,4 +256,10 @@
     <changefreq>never</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://khanai-daily.vercel.app/post.html?slug=2026-06-13-automate-your-content-creation-with-ai</loc>
+    <lastmod>2026-06-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
